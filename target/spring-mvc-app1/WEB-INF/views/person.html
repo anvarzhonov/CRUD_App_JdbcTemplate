@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en,ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Информация об одном человеке</title>
+    <title>information about one person</title>
 </head>
 <body>
 <h2 th:text="${person.getName()}"></h2>
 <h2 th:text="${person.getId()}"></h2>
 
-<a th:href="@{/people/{id}/edit(id= ${person.getId()})}" style="font-size: 7px">Редактировать человека</a>
+<a th:href="@{/people/{id}/edit(id= ${person.getId()})}" style="font-size: 7px">Edit the person</a>
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Delete person">
 </form>

@@ -34,7 +34,7 @@ public class PersonDAO {
     public List<Person> showAll() {
         List<Person> people = new ArrayList<>();
 
-        Statement statement;
+        Statement statement = null;
         try {
             statement = connection.createStatement();
             String SQL = "SELECT * FROM person";
@@ -69,7 +69,7 @@ public class PersonDAO {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("SELECT * FROM person WHERE id= ? ");
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery(); // выполняем запрос к базе данных
 
             resultSet.next();
 
@@ -87,16 +87,14 @@ public class PersonDAO {
     }
 
     public void save(Person person) {
-//        person.setId(++AUTO_INCREMENT);
-//        people.add(person);
 
         try {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("INSERT INTO person VALUES(1,?,?,?)");
 
-            preparedStatement.setString(1,person.getName());
-            preparedStatement.setInt(2,person.getAge());
-            preparedStatement.setString(3,person.getEmail());
+            preparedStatement.setString(1, person.getName());
+            preparedStatement.setInt(2, person.getAge());
+            preparedStatement.setString(3, person.getEmail());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -105,20 +103,14 @@ public class PersonDAO {
     }
 
     public void update(int id, Person updatedPerson) {
-//        Person personToBeUpdated = show(id); // нашли человека по его id с помощью show. Это человек которого
-//        // необходимо обновить
-//        personToBeUpdated.setName(updatedPerson.getName());
-//        personToBeUpdated.setAge(updatedPerson.getAge());
-//        personToBeUpdated.setEmail(updatedPerson.getEmail());
-
         try {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("UPDATE person SET name=?,age=?,email=? WHERE id=?");
 
-            preparedStatement.setString(1,updatedPerson.getName());
-            preparedStatement.setInt(2,updatedPerson.getAge());
-            preparedStatement.setString(3,updatedPerson.getEmail());
-            preparedStatement.setInt(4,id);
+            preparedStatement.setString(1, updatedPerson.getName());
+            preparedStatement.setInt(2, updatedPerson.getAge());
+            preparedStatement.setString(3, updatedPerson.getEmail());
+            preparedStatement.setInt(4, id);
 
             preparedStatement.executeUpdate();
 
@@ -128,14 +120,13 @@ public class PersonDAO {
     }
 
     public void delete(int id) {
-//        people.removeIf(person -> person.getId() == id);
-
         try {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("DELETE FROM person WHERE id=?");
             preparedStatement.setInt(1, id);
 
-            preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate(); // выполнение sql- запроса.
+            // Если не прописать, то у нас будет создан sql запрос, но он не будет выполнен
 
         } catch (SQLException e) {
             e.printStackTrace();
