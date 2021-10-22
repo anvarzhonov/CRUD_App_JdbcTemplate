@@ -1,5 +1,7 @@
 package ru.alishev.springcourse.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.alishev.springcourse.models.Person;
 
@@ -9,58 +11,17 @@ import java.util.List;
 
 @Component
 public class PersonDAO {
+    private final JdbcTemplate jdbcTemplate;
 
-    private static final String URL = "jdbc:mysql://localhost:3307/jdbc_db";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "2001";
-
-    private static Connection connection;
-
-    static {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Autowired
+    public PersonDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
 
+
     public List<Person> showAll() {
-        List<Person> people = new ArrayList<>();
-
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
-            String SQL = "SELECT * FROM person";
-            ResultSet resultSet = statement.executeQuery(SQL);
-
-            while (resultSet.next()) {
-                Person person = new Person();
-
-                int id_db = resultSet.getInt("id");
-                String name_db = resultSet.getString("name");
-                int age_db = resultSet.getInt("age");
-                String email_db = resultSet.getString("email");
-
-                person.setId(id_db);
-                person.setName(name_db);
-                person.setAge(age_db);
-                person.setEmail(email_db);
-
-                people.add(person);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return people;
+        return jdbcTemplate.query("SELECT * FROM person", new PersonMapper());
     }
 
     public Person show(int id) {
